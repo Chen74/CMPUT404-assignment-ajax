@@ -22,7 +22,7 @@
 
 
 import flask
-from flask import Flask, request
+from flask import Flask, request, redirect
 import json
 
 app = Flask(__name__)
@@ -66,8 +66,8 @@ myWorld = World()
 # I give this to you, this is how you get the raw body/data portion of a post in flask
 # this should come with flask but whatever, it's not my project.
 def flask_post_json():
-    '''Ah the joys of frameworks! They do so much work for you
-       that they get in the way of sane operation!'''
+    """Ah the joys of frameworks! They do so much work for you
+       that they get in the way of sane operation!"""
     if request.json is not None:
         return request.json
     elif request.data is not None and request.data.decode("utf8") != u'':
@@ -78,32 +78,33 @@ def flask_post_json():
 
 @app.route("/")
 def hello():
-    '''Return something coherent here.. perhaps redirect to /static/index.html '''
-    return None
+    """Return something coherent here. perhaps redirect to /static/index.html """
+    return redirect("/static/index.html")
 
 
 @app.route("/entity/<entity>", methods=['POST', 'PUT'])
 def update(entity):
-    '''update the entities via this interface'''
-    return None
+    """update the entities via this interface"""
+    myWorld.set(entity, flask_post_json())
+    return flask.jsonify(myWorld.get(entity))
 
 
 @app.route("/world", methods=['POST', 'GET'])
 def world():
-    '''you should probably return the world here'''
-    return None
-
+    """you should probably return the world here"""
+    return flask.jsonify(myWorld.world())
 
 @app.route("/entity/<entity>")
 def get_entity(entity):
-    '''This is the GET version of the entity interface, return a representation of the entity'''
-    return None
+    """This is the GET version of the entity interface, return a representation of the entity"""
+    return flask.jsonify(myWorld.get(entity))
 
 
 @app.route("/clear", methods=['POST', 'GET'])
 def clear():
-    '''Clear the world out!'''
-    return None
+    """Clear the world out!"""
+    myWorld.clear()
+    return flask.jsonify(myWorld.world())
 
 
 if __name__ == "__main__":
