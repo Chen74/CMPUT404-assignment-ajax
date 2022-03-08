@@ -58,7 +58,7 @@ class World:
 
 
 # you can test your webservice from the commandline
-# curl -v   -H "Content-Type: application/json" -X PUT http://127.0.0.1:5000/entity/X -d '{"x":1,"y":1}' 
+# curl -v   -H "Content-Type: application/json" -X PUT http://127.0.0.1:5000/entity/X -d '{"x":1,"y":1}'
 
 myWorld = World()
 
@@ -93,6 +93,7 @@ def update(entity):
 def world():
     """you should probably return the world here"""
     return flask.jsonify(myWorld.world())
+
 
 @app.route("/entity/<entity>")
 def get_entity(entity):
